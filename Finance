@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiduciary Management and Implementation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color-start: #667eea;
+            --primary-color-end: #764ba2;
+            --text-dark: #2d3748;
+            --text-light: #4a5568;
+            --bg-light: #f8fafc;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            --card-shadow-hover: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color-start) 0%, var(--primary-color-end) 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 36px;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 20px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 50px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 3px solid var(--primary-color-start);
+            padding-bottom: 20px;
+        }
+
+        /* --- Governance Structure Styling --- */
+        .governance-structure {
+            text-align: center;
+        }
+
+        .central-committee {
+            background: white;
+            color: var(--text-dark);
+            padding: 30px;
+            border-radius: 16px;
+            margin: 0 auto 60px auto;
+            max-width: 700px;
+            text-align: center;
+            border: 2px solid var(--primary-color-start);
+            box-shadow: var(--card-shadow);
+            position: relative;
+        }
+
+        .central-committee h3 {
+            margin: 0 0 15px 0;
+            font-size: 28px;
+            color: var(--primary-color-start);
+        }
+        
+        /* Connector line from central committee */
+        .central-committee::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 60px;
+            background: var(--primary-color-start);
+        }
+
+        .committee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 60px 40px; /* Increased row gap for connectors */
+            margin-top: 60px; /* Space for the connector */
+            position: relative;
+        }
+        
+        /* Horizontal connector line for grid */
+        .committee-grid::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: var(--primary-color-start);
+        }
+
+        .committee-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: left;
+            position: relative;
+        }
+        
+        /* Vertical connector lines for each card */
+        .committee-card::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 30px;
+            background: var(--primary-color-start);
+        }
+
+        .committee-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: var(--primary-color-start);
+        }
+
+        .committee-card h4 {
+            color: var(--primary-color-start);
+            margin: 0 0 20px 0;
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .committee-card h4 svg {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .committee-details {
+            font-size: 16px;
+        }
+
+        .detail-item {
+            margin-bottom: 12px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .stewardship-section {
+            margin-top: 60px;
+        }
+        
+        .stewardship-section .section-subtitle {
+             font-size: 24px;
+             font-weight: 600;
+             color: var(--text-light);
+             margin-bottom: 40px;
+        }
+
+        /* --- Evaluation Section Styling --- */
+        .evaluation-section {
+            background: var(--bg-light);
+            padding: 50px;
+            border-radius: 16px;
+            margin-top: 60px;
+        }
+
+        .evaluation-table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .likert-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 18px;
+        }
+
+        .likert-table th {
+            background: var(--text-dark);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            font-weight: 600;
+            border-right: 1px solid #4a5568;
+        }
+
+        .likert-table th:first-child {
+            text-align: left;
+            width: 35%;
+        }
+
+        .likert-table th:last-child {
+            border-right: none;
+        }
+
+        .likert-table tr:nth-child(even) {
+            background-color: var(--bg-light);
+        }
+        
+        .likert-table tr:hover {
+             background-color: #e9d5ff; /* A light purple for hover */
+        }
+
+        .likert-table td {
+            padding: 25px 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        .likert-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .likert-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .likert-table input[type="radio"] {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color-end);
+        }
+
+        .comments-section {
+            margin-top: 25px;
+        }
+
+        .comments-label {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            display: block;
+            font-size: 20px;
+        }
+
+        .comments-box {
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 120px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .comments-box:focus {
+            outline: none;
+            border-color: var(--primary-color-start);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; font-size: 16px; }
+            .header h1 { font-size: 28px; }
+            .header p { font-size: 18px; }
+            .main-content { padding: 20px; }
+            .section-title { font-size: 26px; }
+            
+            .committee-grid::before { left: 5%; right: 5%; } /* Adjust horizontal connector on mobile */
+
+            .likert-table th,
+            .likert-table td { font-size: 14px; padding: 15px 5px; }
+            .likert-table th:first-child { font-size: 15px; }
+            .likert-table input[type="radio"] { width: 18px; height: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Fiduciary Management and Implementation</h1>
+            <p>Comprehensive Governance Structure and Evaluation Framework</p>
+        </div>
+
+        <div class="main-content">
+            <div class="governance-structure">
+                <h2 class="section-title">Governance Structure</h2>
+                
+                <div class="central-committee">
+                    <h3>Financial Review Committee</h3>
+                    <div><strong>Primary Oversight Body:</strong> Financial policy development & monthly financial statement review.</div>
+                    <div><strong>Meets:</strong> Monthly | <strong>Members:</strong> Treasurer, Manager of Finance, Synod Leader, Moderator, + 2 others</div>
+                </div>
+
+                <div class="committee-grid">
+                    <div class="committee-card">
+                        <h4>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286zm0 13.036h.008v.008h-.008v-.008z" /></svg>
+                            Audit Committee
+                        </h4>
+                        <div class="committee-details">
+                            <div class="detail-item"><span class="detail-label">Purpose:</span> Review annual audit with independent firm and recommend policy changes.</div>
+                            <div class="detail-item"><span class="detail-label">Schedule:</span> Annual meetings</div>
+                            <div class="detail-item"><span class="detail-label">Members:</span> Treasurer, Manager of Finance, Synod Leader, + 3 others</div>
+                        </div>
+                    </div>
+
+                    <div class="committee-card">
+                        <h4>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-3.75-2.25M21 12l-3.75 2.25" /></svg>
+                            Investment Review Committee
+                        </h4>
+                        <div class="committee-details">
+                            <div class="detail-item"><span class="detail-label">Purpose:</span> Monitor investment portfolio performance, advisors, and policies.</div>
+                            <div class="detail-item"><span class="detail-label">Schedule:</span> Quarterly meetings</div>
+                            <div class="detail-item"><span class="detail-label">Members:</span> Treasurer, Manager of Finance, Synod Leader, + 3 others</div>
+                        </div>
+                    </div>
+
+                    <div class="committee-card">
+                        <h4>
+                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12" /></svg>
+                            Budget Review Committee
+                        </h4>
+                        <div class="committee-details">
+                            <div class="detail-item"><span class="detail-label">Purpose:</span> Coordinate budget development and monitor operating budget.</div>
+                            <div class="detail-item"><span class="detail-label">Schedule:</span> Annual meetings</div>
+                            <div class="detail-item"><span class="detail-label">Members:</span> Conveners, moderators, and staff</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stewardship-section">
+                    <h3 class="section-subtitle">Strategic Development Teams</h3>
+                    <div class="committee-grid">
+                         <div class="committee-card">
+                            <h4>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a8.25 8.25 0 01-16.5 0v-8.25a8.25 8.25 0 0116.5 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 15.75a3 3 0 003-3H9a3 3 0 003 3z" /></svg>
+                                Stewardship Planning & Strategy
+                            </h4>
+                            <div class="committee-details">
+                                <div class="detail-item"><span class="detail-label">Purpose:</span> Develop funding strategy and manage donor relations.</div>
+                                <div class="detail-item"><span class="detail-label">Schedule:</span> Semi-annual meetings</div>
+                                <div class="detail-item"><span class="detail-label">Members:</span> To be determined</div>
+                            </div>
+                        </div>
+                        <div class="committee-card">
+                            <h4>
+                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
+                                Missional Strategy Team
+                            </h4>
+                            <div class="committee-details">
+                                <div class="detail-item"><span class="detail-label">Purpose:</span> Review missional activities and recommend new initiatives and fundraising strategies.</div>
+                                <div class="detail-item"><span class="detail-label">Schedule:</span> Semi-annual meetings</div>
+                                <div class="detail-item"><span class="detail-label">Members:</span> To be determined</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="evaluation-section">
+                <h2 class="section-title">Financial Review Committee Evaluation</h2>
+
+                <div class="evaluation-table-container">
+                    <table class="likert-table">
+                        <thead>
+                            <tr>
+                                <th>Statement</th>
+                                <th>Strongly<br>Disagree</th>
+                                <th>Disagree</th>
+                                <th>Neutral</th>
+                                <th>Agree</th>
+                                <th>Strongly<br>Agree</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>New procedures are improving financial health and risk management.</td>
+                                <td><input type="radio" name="q1" value="1" id="q1-1"></td>
+                                <td><input type="radio" name="q1" value="2" id="q1-2"></td>
+                                <td><input type="radio" name="q1" value="3" id="q1-3"></td>
+                                <td><input type="radio" name="q1" value="4" id="q1-4"></td>
+                                <td><input type="radio" name="q1" value="5" id="q1-5"></td>
+                            </tr>
+                            <tr>
+                                <td>Financial transparency has improved.</td>
+                                <td><input type="radio" name="q2" value="1" id="q2-1"></td>
+                                <td><input type="radio" name="q2" value="2" id="q2-2"></td>
+                                <td><input type="radio" name="q2" value="3" id="q2-3"></td>
+                                <td><input type="radio" name="q2" value="4" id="q2-4"></td>
+                                <td><input type="radio" name="q2" value="5" id="q2-5"></td>
+                            </tr>
+                            <tr>
+                                <td>Financial Review Teams effectively fulfill responsibilities previously held by the Administrative Working Group.</td>
+                                <td><input type="radio" name="q3" value="1" id="q3-1"></td>
+                                <td><input type="radio" name="q3" value="2" id="q3-2"></td>
+                                <td><input type="radio" name="q3" value="3" id="q3-3"></td>
+                                <td><input type="radio" name="q3" value="4" id="q3-4"></td>
+                                <td><input type="radio" name="q3" value="5" id="q3-5"></td>
+                            </tr>
+                            <tr>
+                                <td>Gaps in the financial review process have been identified with clear plans and timelines to address them.</td>
+                                <td><input type="radio" name="q4" value="1" id="q4-1"></td>
+                                <td><input type="radio" name="q4" value="2" id="q4-2"></td>
+                                <td><input type="radio" name="q4" value="3" id="q4-3"></td>
+                                <td><input type="radio" name="q4" value="4" id="q4-4"></td>
+                                <td><input type="radio" name="q4" value="5" id="q4-5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="comments-section">
+                    <label for="comments" class="comments-label">Additional Comments</label>
+                    <textarea id="comments" class="comments-box" placeholder="Please provide any additional feedback, suggestions, or concerns..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
